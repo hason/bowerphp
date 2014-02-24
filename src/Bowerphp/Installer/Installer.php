@@ -5,8 +5,6 @@ namespace Bowerphp\Installer;
 use Bowerphp\Config\ConfigInterface;
 use Bowerphp\Package\Package;
 use Bowerphp\Package\PackageInterface;
-use Bowerphp\Util\ZipArchive;
-use Gaufrette\Filesystem;
 use RuntimeException;
 
 /**
@@ -28,7 +26,7 @@ class Installer implements InstallerInterface
      * @param ZipArchive      $zipArchive
      * @param ConfigInterface $config
      */
-    public function __construct(Filesystem $filesystem, ZipArchive $zipArchive, ConfigInterface $config)
+    public function __construct(Filesystem $filesystem, \ZipArchive $zipArchive, ConfigInterface $config)
     {
         $this->filesystem = $filesystem;
         $this->zipArchive = $zipArchive;
@@ -141,11 +139,11 @@ class Installer implements InstallerInterface
      * @param  array      $ignore
      * @return array
      */
-    protected function filterZipFiles(ZipArchive $archive, array $ignore = array())
+    protected function filterZipFiles(\ZipArchive $archive, array $ignore = array())
     {
         $dirName = $archive->getNameIndex(0);
         $return = array();
-        $numFiles = $archive->getNumFiles();
+        $numFiles = $archive->numFiles;
         for ($i = 0; $i < $numFiles; $i++) {
             $stat = $archive->statIndex($i);
             if ($stat['size'] > 0) {    // directories have sizes 0

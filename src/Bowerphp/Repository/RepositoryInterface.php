@@ -2,26 +2,14 @@
 
 namespace Bowerphp\Repository;
 
-use Guzzle\Http\ClientInterface;
+use Composer\Repository\RepositoryInterface as ComposerRepositoryInterface;
 
 /**
  * Repository interface.
  *
  */
-interface RepositoryInterface
+interface RepositoryInterface extends ComposerRepositoryInterface
 {
-    const VERSION_NOT_FOUND = 3;
-
-    /**
-     * @param string $url
-     */
-    public function setUrl($url);
-
-    /**
-     * @param ClientInterface $httpClient
-     */
-    public function setHttpClient(ClientInterface $httpClient);
-
     /**
      * Get repo bower.json
      *
@@ -31,25 +19,4 @@ interface RepositoryInterface
      * @return string
      */
     public function getBower($version = 'master', $includeHomepage = false, $url = '');
-
-    /**
-     * Searches for the first match of a package version.
-     *
-     * @param  string $version package version
-     * @return string
-     */
-    public function findPackage($version = '*');
-
-    /**
-     * Get a release
-     *
-     * @param  string $type "zip" or "tar"
-     * @return string file content
-     */
-    public function getRelease($type = 'zip');
-
-    /**
-     * @return array
-     */
-    public function getTags();
 }

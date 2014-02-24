@@ -12,11 +12,10 @@
 namespace Bowerphp\Console;
 
 use Bowerphp\Command;
-use Bowerphp\Command\Helper\DialogHelper;
-use Bowerphp\Util\ErrorHandler;
+use Composer\Command\Helper\DialogHelper;
+use Composer\Util\ErrorHandler;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\HelpCommand;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,6 +44,15 @@ class Application extends BaseApplication
      */
     public function __construct()
     {
+        if (function_exists('ini_set')) {
+            ini_set('xdebug.show_exception_trace', false);
+            ini_set('xdebug.scream', false);
+
+        }
+        if (function_exists('date_default_timezone_set') && function_exists('date_default_timezone_get')) {
+            date_default_timezone_set(@date_default_timezone_get());
+        }
+
         ErrorHandler::register();
         parent::__construct('Bowerphp', '0.1 Powered by BeeLab (bee-lab.net)');
     }
@@ -67,7 +75,7 @@ class Application extends BaseApplication
             chdir($newWorkDir);
         }
 
-        $result = $this->SymfonyDoRun($input, $output);
+        $result = parent::doRun($input, $output);
 
         if (isset($oldWorkingDir)) {
             chdir($oldWorkingDir);
@@ -144,49 +152,5 @@ class Application extends BaseApplication
         }
 
         return $workingDir;
-    }
-
-    /**
-     * Copy of original Symfony doRun, to allow a default command
-     *
-     * @param InputInterface  $input   An Input instance
-     * @param OutputInterface $output  An Output instance
-     * @param string          $default Default command to execute
-     *
-     * @return integer 0 if everything went fine, or an error code
-     * @codeCoverageIgnore
-     */
-    private function SymfonyDoRun(InputInterface $input, OutputInterface $output, $default = 'list-commands')
-    {
-        if (true === $input->hasParameterOption(array('--version', '-V'))) {
-            $output->writeln($this->getLongVersion());
-
-            return 0;
-        }
-
-        $name = $this->getCommandName($input);
-
-        if (true === $input->hasParameterOption(array('--help', '-h'))) {
-            if (!$name) {
-                $name = 'help';
-                $input = new ArrayInput(array('command' => 'help'));
-            } else {
-                $this->wantHelps = true;
-            }
-        }
-
-        if (!$name) {
-            $name = $default;
-            $input = new ArrayInput(array('command' => $default));
-        }
-
-        // the command name MUST be the first element of the input
-        $command = $this->find($name);
-
-        $this->runningCommand = $command;
-        $exitCode = $this->doRunCommand($command, $input, $output);
-        $this->runningCommand = null;
-
-        return $exitCode;
     }
 }

@@ -12,8 +12,6 @@
 namespace Bowerphp\Config;
 
 use Bowerphp\Package\PackageInterface;
-use Bowerphp\Util\Json;
-use Gaufrette\Filesystem;
 use RuntimeException;
 
 /**

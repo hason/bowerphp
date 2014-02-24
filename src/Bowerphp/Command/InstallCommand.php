@@ -89,7 +89,7 @@ EOT
         $bowerphp = new Bowerphp($config, $filesystem, $httpClient, new GithubRepository(), $consoleOutput);
 
         try {
-            $installer = new Installer($filesystem, new ZipArchive(), $config);
+            $installer = new Installer($filesystem, new \ZipArchive(), $config);
 
             if (is_null($packageName)) {
                 $bowerphp->installDependencies($installer);

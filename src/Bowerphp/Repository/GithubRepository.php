@@ -2,7 +2,6 @@
 
 namespace Bowerphp\Repository;
 
-use Bowerphp\Util\Json;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\RequestException;
